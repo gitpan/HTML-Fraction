@@ -1,4 +1,7 @@
 CHANGES file for HTML::Fraction:
 
+0.30 Sun Jun  5 10:32:24 BST 2005
+  - fix silly mistake in the test suite
+
 0.29 Sat Jun  4 22:27:55 BST 2005
   - first release
