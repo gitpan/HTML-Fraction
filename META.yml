@@ -1,8 +1,12 @@
 ---
 name: HTML-Fraction
-version: 0.30
+version: 0.40
 author:
-  - 'Leon Brocard, C<< <acme@astray.com> >>'
+  - >-
+    Leon Brocard, C<< <acme@astray.com> >>. Mark Fowler C<<
+    <mark@twoshortplanks> >>
+    
+    added some code, and probably some bugs.
 abstract: Encode fractions as HTML entities
 license: perl
 requires:
@@ -10,5 +14,5 @@ requires:
 provides:
   HTML::Fraction:
     file: lib/HTML/Fraction.pm
-    version: 0.30
+    version: 0.40
 generated_by: Module::Build version 0.261
