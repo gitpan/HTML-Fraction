@@ -3,7 +3,7 @@
 use strict;
 use warnings;
 
-use Test::More tests => 16;
+use Test::More tests => 133;
 use_ok('HTML::Fraction');
 
 # these are adapted forms of leon's tests
@@ -12,43 +12,180 @@ my $f = HTML::Fraction->new;
 isa_ok($f, 'HTML::Fraction');
 
 is($f->tweak("Hi there"), "Hi there");
-is($f->tweak("Half is 1/2"), "Half is &frac12;");
-is($f->tweak("1/2 of 1/2 is 1/4"),  "&frac12; of &frac12; is &frac14;");
-is($f->tweak("1/5 of 1/5 is 1/25"), "&#8533; of &#8533; is 1/25");
 
-# my own tests
+my $test;
+while (<DATA>) {
+  chomp;
+  unless ($test) {
+    $test = $_;
+    next;
+  }
+  unless ($_) {
+    undef $test;
+    next;
+  }
+  ((s/^!//) ? \&isnt : \&is )->($f->tweak("foo $_ foo $_ foo"),"foo $test foo $test foo", "convert $_");
+}
 
-is($f->tweak("Half is 0.5 or .5 or 000.5 or 0.5000"),
-   "Half is &frac12; or &frac12; or &frac12; or &frac12;");
+__DATA__
+&frac12;
+1/2
+0.5
+.5
+0.50
+0.5000
 
-is($f->tweak("Third is .33 or 0.33 or 0.333 or 0.3333 but not 0.3"),
-             "Third is &#8531; or &#8531; or &#8531; or &#8531; but not 0.3");
-   
-is($f->tweak("Two Thirds is .667 or 0.67 or 0.667 or 0.6667"),
-             "Two Thirds is &#8532; or &#8532; or &#8532; or &#8532;");
+&#8585;
+0/3
+!0
+!0.0
 
-is($f->tweak("One sixth is .167 or 0.17 or 0.1667 or 0.16667"),
-             "One sixth is &#8537; or &#8537; or &#8537; or &#8537;");
+&#8531;
+1/3
+0.33
+0.333
+0.3333
+.33
+.333
+.3333
+!.3
+!.33334
 
+&#8532;
+2/3
+0.67
+0.667
+0.6667
+.67
+.667
+.6667
+!.6
 
-is($f->tweak("Five sixth is .83 or 0.833 or 0.8333 or 0.8333"),
-             "Five sixth is &#8538; or &#8538; or &#8538; or &#8538;");
+&frac14;
+1/4
+0.25
+.25
+0.250
+.250
+0.25000
+.25000
 
+&frac34;
+3/4
+0.75
+.75
+0.750
+.750
+0.75000
+.75000
 
-isnt($f->tweak("Two Thirds is 0.6"),  # this will be encoded as 3/5
-               "Two Thirds is &#8532;");
+&#8533;
+1/5
+0.2
+.2
+0.20
+.20
+0.200
+.200
 
-isnt($f->tweak("Two Thirds is 0.66"),  # this will be left alone
-               "Two Thirds is &#8532;");
+&#8534;
+2/5
+0.4
+.4
+0.40
+.40
+0.400
+.400
 
-isnt($f->tweak("Two Thirds is 0.7"),  # this is just wrong
-               "Two Thirds is &#8532;");
+&#8535;
+3/5
+0.6
+.6
+0.60
+.60
+0.600
+.600
 
+&#8536;
+4/5
+0.8
+.8
+0.80
+.80
+0.800
+.800
 
-# right, make sure we're not eating things we shouldn't
-is($f->tweak("ten and a half is 10.5"),
-             "ten and a half is 10&frac12;");
+&#8537;
+1/6
+0.17
+0.167
+0.166667
+.17
+.167
+.166667
 
-is($f->tweak("hundred and a half is 100.5"),
-             "hundred and a half is 100&frac12;")
-     or Dump($f->tweak("hunderd and a half is 100.5"));
+&#8538;
+5/6
+0.83
+0.833
+0.83333
+.83
+.833
+.83333
+
+&#8528;
+1/7
+0.14
+0.143
+!0.142
+0.1429
+!0.1428
+0.14286
+!0.14285
+0.142857
+0.1428571
+0.14285714
+0.142857143
+0.142857142857143
+.14
+.143
+!.142
+.1429
+!.1428
+.14286
+!.14285
+.142857
+.1428571
+.14285714
+.142857143
+.142857142857143
+
+&#8539;
+1/8
+0.13
+.13
+0.125
+.125
+0.1250
+.1250
+0.12500
+.12500
+
+&#8529;
+1/9
+0.11
+0.111
+0.1111
+.11
+.111
+.1111
+!0.1
+
+&#8530;
+1/10
+0.1
+.1
+0.10
+.10
+0.10000
+.100000
